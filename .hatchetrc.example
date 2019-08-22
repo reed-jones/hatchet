@@ -1,0 +1,40 @@
+/**
+ * This is an example configuration file.
+ */
+
+module.exports = {
+    SLACK_API: null, // get url from here: https://api.slack.com/incoming-webhooks
+
+    logs: [
+        {
+            // parse the line into regex groups to be used in message & notificationConditions (optional)
+            regex: /^(?<date>[\d-]{10} \d{2}:\d{2}:\d{2},\d{3}) \[(?<status>[\w]*) *\] (?<message>.*)$/,
+
+            // the formatted output (optional)
+            message: ({ groups, file, line }) => `_${file}_: ${groups.date} *[${groups.status}]* ${groups.message}`,
+
+            // the name of the file to be watched
+            file: '/var/logs/example.log',
+
+            // Customize Notifications (optional)
+            notificationConditions: {
+                // only send slack notifications if 'status' === 'INFO'
+                // 'slack' keyword identifies from the 'notifications'
+                // section in the config object. 'Status' is injected by
+                // the regex group above.
+                slack: ({ status }) => status === 'INFO',
+
+
+                // Forward all lines to email
+                // *Note: a new email will be sent for every line
+                // https://github.com/reed-jones/hatchet/issues/3
+                email: _ => true,
+
+                // send all notifications if 'status' === 'ERROR'
+                // 'all' is a special keyword to notify all clients
+                // if no notificationConditions exist, all is the default
+                all: ({ status }) => status === 'ERROR',
+            }
+        }
+    ]
+}

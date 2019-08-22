@@ -1,25 +1,27 @@
-const Tail = require('tail').Tail;
-const { successCallback, errorCallback } = require('./callbacks')
-
-// export notification clients
-const { slackClient } = require("./notificationClients/slackClient");
-module.exports.slack = api => slackClient(api)
-
-const { emailClient } = require('./notificationClients/emailClient')
-module.exports.email = config => emailClient(config)
-
-const { webhookClient } = require('./notificationClients/webhookClient')
-module.exports.webhook = config => webhookClient(config)
+#!/usr/bin/env node
 
 
-module.exports.Hatchet = function (files, config) {
-    for (const file of files) {
-        try {
-            file.tail = new Tail(file.file)
-            file.tail.on('line', successCallback(file, config.notifications))
-            file.tail.on('error', errorCallback)
-        } catch ({ context }) {
-            console.error(context)
-        }
+// Import Hatchet
+const { Hatchet } = require('./hatchetHelpers')
+
+// import all notification clients
+const { slack, email, webhook } = require('./notificationClients')
+
+// cli argument parser.
+const { cli } = require('./meow')
+
+// load the configuration file
+const configuration = require(cli.flags.config)
+
+// TODO: merge the configuration above with default options
+
+const config = {
+    // Pass initialized clients here.
+    // Notification Clients must provide a 'sendMessage(<string> message, <object> details)'
+    // function in order to be functional
+    notifications: {
+        ...configuration.SLACK_API && { slack: slack(configuration.SLACK_API) }
     }
 }
+
+new Hatchet(configuration.logs, config)

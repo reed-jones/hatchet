@@ -1,6 +1,5 @@
 const { Hatchet, slack, email, webhook } = require('./hatchet')
 
-
 new Hatchet([
     {
         // parse the line into regex groups

@@ -48,7 +48,7 @@ module.exports.Hatchet = function (logs, config) {
      * @return {Object} file
      */
     const getMostRecent = (newest, file) => {
-        return file.fileInfo.stat.ctimeMs > newest.fileInfo.stat.ctimeMs ? file : newest
+        return file.stat.ctimeMs > newest.stat.ctimeMs ? file : newest
     }
 
     for (const log of logs) {

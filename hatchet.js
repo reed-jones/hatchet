@@ -20,8 +20,8 @@ const config = {
     // Notification Clients must provide a 'sendMessage(<string> message, <object> details)'
     // function in order to be functional
     notifications: {
-        slack: slack(configuration.SLACK_API)
-        // cli: cli()
+        ...configuration.SLACK_API && { slack: slack(configuration.SLACK_API) },
+        ...configuration.CONSOLE && { cli: cli() }
     }
 }
 

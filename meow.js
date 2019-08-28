@@ -5,8 +5,8 @@ const meow = require('meow')
 // get users homedir for config finding
 const homedir = require('os').homedir()
 
-//
-module.exports.cli = meow(`
+// Configure 'meow' cli client
+module.exports.meow = meow(`
     Usage
       $ hatchet
 
@@ -21,7 +21,7 @@ module.exports.cli = meow(`
             type: 'string',
             alias: 'c',
             // defaults to home dir
-            default: `${homedir}/.hatchetrc`
+            default: `${homedir}/.hatchetrc.js`
         }
     }
 });

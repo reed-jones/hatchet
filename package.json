@@ -1,13 +1,13 @@
 {
-  "name": "hatchet",
-  "version": "1.0.0",
-  "description": "Turns your logs to kindling.",
+  "name": "@j0nz/hatchet",
+  "version": "1.0.0-alpha",
+  "description": "Cut down your logs",
   "main": "index.js",
   "bin": "hatchet.js",
   "author": "Reed Jones <reedjones@reedjones.com>",
   "license": "ISC",
   "assets": [
-    ".hatchetrc.example"
+    ".hatchetrc.example.js"
   ],
   "scripts": {
     "start": "node ./hatchet.js",

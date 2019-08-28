@@ -7,9 +7,15 @@ const { successCallback, errorCallback } = require('./callbacks')
 
 const absPath = p => p.replace(/^~\//, `${homedir}/`)
 
-
 module.exports.Hatchet = function (logs, config) {
 
+    /**
+     * Starts a new 'tail' instance
+     *
+     * @param {Object} formatted
+     *
+     * @return {Object}
+     */
     const initTail = formatted => {
         let tail = new Tail(absPath(formatted.full_path))
         tail.on('line', successCallback(formatted, config.notifications))
@@ -17,7 +23,14 @@ module.exports.Hatchet = function (logs, config) {
         return tail
     }
 
-
+    /**
+     * Normalizes & Formats file information
+     *
+     * @param {String} fullPath
+     * @param {Object} log
+     *
+     * @return {Object}
+     */
     const formatFileInfo = (fullPath, log) => ({
         basename: path.basename(fullPath),
         full_path: fullPath,
@@ -35,7 +48,7 @@ module.exports.Hatchet = function (logs, config) {
      * @return {Object} file
      */
     const getMostRecent = (newest, file) => {
-        return file.stat.ctimeMs > newest.stat.ctimeMs ? file : newest
+        return file.fileInfo.stat.ctimeMs > newest.fileInfo.stat.ctimeMs ? file : newest
     }
 
     for (const log of logs) {
@@ -63,7 +76,6 @@ module.exports.Hatchet = function (logs, config) {
             // find newest file and start monitoring
             if (files.length) {
                 const formatted = files.reduce(getMostRecent, files[0])
-
                 tail = initTail(formatted)
             }
 

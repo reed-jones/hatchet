@@ -3,6 +3,10 @@
 # Minimal Hatchet systemd install script for linux
 # follows the installation process found in the wiki
 # https://github.com/reed-jones/hatchet/wiki/Installation
+#
+# dont run random scripts from the internet with curl!
+#
+# curl -s https://raw.githubusercontent.com/reed-jones/hatchet/master/scripts/install-systemd.sh | bash
 
 # find the proper release and copy the link
 wget https://github.com/reed-jones/hatchet/releases/download/v1.0.0-alpha/hatchet-linux

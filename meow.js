@@ -1,4 +1,3 @@
-
 // Meow is the CLI helper
 const meow = require('meow')
 const pkg = require('./package.json')
@@ -7,7 +6,8 @@ const pkg = require('./package.json')
 const homedir = require('os').homedir()
 
 // Configure 'meow' cli client
-module.exports.meow = meow(`
+module.exports.meow = meow(
+  `
     Version: ${pkg.version}
 
     Usage
@@ -20,13 +20,15 @@ module.exports.meow = meow(`
 
     Examples
       $ hatchet --config /path/to/config.js
-`, {
+`,
+  {
     flags: {
       config: {
-          type: 'string',
-          alias: 'c',
-          // defaults to home dir
-          default: `${homedir}/.hatchetrc.js`
-      }
-    }
-});
+        type: 'string',
+        alias: 'c',
+        // defaults to home dir
+        default: `${homedir}/.hatchetrc.js`,
+      },
+    },
+  },
+)

@@ -1,5 +1,5 @@
 {
-  "name": "@j0nz/hatchet",
+  "name": "@j0nz/hatchet-cli",
   "version": "1.2.0-alpha",
   "description": "Cut down your logs",
   "main": "index.js",

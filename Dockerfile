@@ -12,4 +12,4 @@ COPY . .
 
 # to run the app, the config directory must be mounted as a
 # volume so the config persists between upgrades.
-CMD [ "node", "hatchet.js", "--config=/config/.hatchetrc" ]
+CMD [ "node", "hatchet.js", "start", "--config=/config/.hatchetrc.js" ]

@@ -1,23 +1,27 @@
 {
   "name": "@j0nz/hatchet",
-  "version": "1.1.0-alpha",
+  "version": "1.2.0-alpha",
   "description": "Cut down your logs",
   "main": "index.js",
-  "bin": "hatchet.js",
   "author": "Reed Jones <reedjones@reedjones.com>",
   "license": "ISC",
   "assets": [
     ".hatchetrc.example.js"
   ],
+  "bin": {
+    "hatchet": "./hatchet.js"
+  },
   "scripts": {
     "start": "node ./hatchet.js",
     "build": "pkg . --out-path=dist"
   },
   "dependencies": {
     "axios": "^0.19.0",
+    "chalk": "^2.4.2",
     "chokidar": "^3.0.2",
-    "meow": "^5.0.0",
-    "tail": "^2.0.3"
+    "pm2": "^4.1.2",
+    "tail": "^2.0.3",
+    "yargs": "^14.2.0"
   },
   "devDependencies": {
     "pkg": "^4.4.0"

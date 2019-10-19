@@ -12,7 +12,7 @@ class WatchableFile {
     }
     this.config = config
     this.notifications = notifications
-    this, (callbacks = callbacks)
+    this.callbacks = callbacks
     this.tail = null
   }
 

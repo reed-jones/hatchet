@@ -13,21 +13,27 @@ module.exports.meow = meow(
     Usage
       $ hatchet
 
-    Options
+    CLI Options
       --help,     -h  Display Help
       --version,  -v  Display version information
       --config,   -c  Path to configuration file
 
+    ENV_VAR Options
+      HATCHET_CONFIG  Path to configuration file
+
+
     Examples
       $ hatchet --config /path/to/config.js
+      $ HATCHET_CONFIG=/path/to/config.js hatchet
+
 `,
   {
     flags: {
       config: {
         type: 'string',
         alias: 'c',
-        // defaults to home dir
-        default: `${homedir}/.hatchetrc.js`,
+        // defaults to env var or home dir
+        default: process.env.HATCHET_CONFIG || `${homedir}/.hatchetrc.js`,
       },
     },
   },

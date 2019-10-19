@@ -48,8 +48,9 @@ module.exports = {
        *
        * @return {String}
        */
-      message: ({ groups, file, line }) =>
-        `${file}: ${groups.date} *[${groups.status}]* ${groups.message}`,
+      message: ({ groups, file, line }) => {
+        return `${file}: ${groups.date} *[${groups.status}]* ${groups.message}`
+      },
 
       /**
        * The File to be watched,
@@ -58,6 +59,7 @@ module.exports = {
        * @var {String} file
        */
       file: '/var/logs/example.log',
+    //   dir: '/var/logs/some-project',
 
       /**
        * Notification Conditions help determine which notifications will get
@@ -68,6 +70,7 @@ module.exports = {
        *
        * Implemented clients include:
        *   - slack
+       *   - hatchet
        *   - cli
        *   - all*
        *
@@ -83,7 +86,7 @@ module.exports = {
        */
       notificationConditions: {
         /**
-         * Only send slack notifications if the regex group 'status' === 'INFO'
+         * Only send hatchet notifications if the regex group 'status' === 'INFO'
          *
          * All clients in notificationGroups adhere the same context API
          *
@@ -102,10 +105,10 @@ module.exports = {
          *
          * @return {String}
          */
-        slack: ({ groups }) => groups.status === 'INFO',
+        hatchet: ({ groups }) => groups.status === 'INFO',
 
         /**
-         * Send all configured notifications if the regex group 'status' === 'ERROR'
+         * Only send slack notifications if the regex group 'status' === 'ERROR'
          *
          * All clients in notificationGroups adhere the same context API
          *
@@ -123,7 +126,28 @@ module.exports = {
          *
          * @return {String}
          */
-        all: ({ groups }) => groups.status === 'ERROR',
+        slack: ({ groups }) => groups.status === 'ERROR',
+
+        /**
+         * Send all configured notifications if the regex group 'status' === 'EMERGENCY'
+         *
+         * All clients in notificationGroups adhere the same context API
+         *
+         * @param {Object} context the parent context object
+         *
+         * @param {Object} context.groups all named regex groups found using the regex above. named groups are made using the (?<groupname>[regexPattern]*) format
+         *
+         * @param {Object} context.file the formatted/normalized file instance. this object contains all the elements passed in 'this' file configuration as well as the following:
+         * @param {String} context.file.basename
+         * @param {String} context.file.full_path
+         * @param {String} context.file.dirname
+         * @param {fs.Stats} context.file.stat
+         *
+         * @param {String} line the raw line added to the log
+         *
+         * @return {String}
+         */
+        all: ({ groups }) => groups.status === 'EMERGENCY',
       },
     },
   ],

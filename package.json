@@ -1,6 +1,6 @@
 {
   "name": "@j0nz/hatchet-cli",
-  "version": "1.2.0-alpha",
+  "version": "1.2.3-alpha",
   "description": "Cut down your logs",
   "main": "index.js",
   "author": "Reed Jones <reedjones@reedjones.com>",

@@ -3,7 +3,9 @@ const shouldNotify = (name, { notificationConditions = {} }, rawMsg) =>
 const notifyEach = (notifications, callback) =>
   Object.entries(notifications).forEach(callback)
 
-module.exports.successCallback = (file, notifications = {}) => data => {
+const { hatchetClient } = require('./notificationClients/hatchetClient')
+
+module.exports.successCallback = (file, { hatchet: hatchetConfig, drivers }) => data => {
   // run regex & parse groups
   const results = new RegExp(file.regex, 'gm').exec(data)
 
@@ -32,25 +34,52 @@ module.exports.successCallback = (file, notifications = {}) => data => {
   }
 
   // get formatted message. if no format function is found, the full line will be returned
-  const message =
-    (file.message && file.message(rawMsg)) || `${file.basename}: ${data}`
+  const message = (file.message && file.message(rawMsg)) || `${file.basename}: ${data}`
 
-  if (Object.entries(file.notificationConditions || {}).length) {
-    // Notify each client as per restrictions (if any)
-    notifyEach(notifications, ([name, client]) => {
-      if (
-        shouldNotify(name, file, rawMsg) ||
-        shouldNotify('all', file, rawMsg)
-      ) {
-        client.sendMessage(message, rawMsg)
-      }
-    })
-  } else {
-    // default is notify all clients
-    notifyEach(notifications, ([_, client]) =>
-      client.sendMessage(message, rawMsg),
-    )
+  let { hatchet, ...desiredNotifications } = file.notifications || {};
+
+  if (hatchet) {
+    let mergedHatchet = hatchetConfig.defaults
+    for (let [name, options] of Object.entries(hatchet)) {
+      mergedHatchet[name] = options
+    }
+
+    let enabledOptions = Object.fromEntries(Object.entries(mergedHatchet).filter(([client, options]) => {
+      return typeof options.filter === 'undefined' || (typeof options.filter === 'function' && options.filter(rawMsg))
+    }))
+
+    const msgClient = hatchetClient({ token: hatchetConfig.key, notifications: enabledOptions })
+    msgClient.sendMessage(message, rawMsg)
   }
+
+  const customNotifications = Object.keys(desiredNotifications).filter(n => Object.keys(drivers).includes(n))
+
+  for (let client of customNotifications) {
+    const { filter, ...rest } = file.notifications[client]
+    const msgClient = drivers[client](rest)
+
+    if (typeof filter === 'function' && filter(rawMsg)) {
+      msgClient.sendMessage(message, rawMsg)
+    } else if (typeof filter === 'undefined') {
+      msgClient.sendMessage(message, rawMsg)
+    }
+  }
+  // if (Object.entries(file.notificationConditions || {}).length) {
+  //   // Notify each client as per restrictions (if any)
+  //   notifyEach(notifications, ([name, client]) => {
+  //     if (
+  //       shouldNotify(name, file, rawMsg) ||
+  //       shouldNotify('all', file, rawMsg)
+  //     ) {
+  //       client.sendMessage(message, rawMsg)
+  //     }
+  //   })
+  // } else {
+  //   // default is notify all clients
+  //   notifyEach(notifications, ([_, client]) =>
+  //     client.sendMessage(message, rawMsg),
+  //   )
+  // }
 }
 
 module.exports.errorCallback = error => {

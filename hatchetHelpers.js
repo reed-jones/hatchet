@@ -7,7 +7,7 @@ const { successCallback, errorCallback } = require('./callbacks')
 
 const absPath = p => p.replace(/^~\//, `${homedir}/`)
 
-module.exports.Hatchet = function(logs, config) {
+module.exports.Hatchet = function (configuration) {
   /**
    * Starts a new 'tail' instance
    *
@@ -17,7 +17,7 @@ module.exports.Hatchet = function(logs, config) {
    */
   const initTail = formatted => {
     let tail = new Tail(absPath(formatted.full_path))
-    tail.on('line', successCallback(formatted, config.notifications))
+    tail.on('line', successCallback(formatted, configuration))
     tail.on('error', errorCallback)
     return tail
   }
@@ -50,15 +50,15 @@ module.exports.Hatchet = function(logs, config) {
     return file.stat.ctimeMs > newest.stat.ctimeMs ? file : newest
   }
 
-  for (const log of logs) {
+  for (const log of configuration.logs) {
     if (log.file) {
       try {
         const fullPath = absPath(log.file)
         const formatted = formatFileInfo(fullPath, log)
 
         initTail(formatted)
-      } catch ({ context }) {
-        console.error(context)
+      } catch (err) {
+        console.error(err)
       }
     } else if (log.dir) {
       let tail = null
@@ -91,7 +91,7 @@ module.exports.Hatchet = function(logs, config) {
           const formatted = formatFileInfo(newFile, log)
 
           // tail will miss the original write to the file, so we manually call our successCallback
-          successCallback(formatted, config.notifications)(
+          successCallback(formatted, configuration.drivers)(
             fs.readFileSync(newFile, 'utf8').trim(),
           )
 

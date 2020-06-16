@@ -7,4 +7,4 @@ const { Hatchet } = require('./hatchetHelpers')
 const argv = require('yargs').argv
 
 // load the configuration file
-new Hatchet(require(argv.config))
+new Hatchet(argv.config)

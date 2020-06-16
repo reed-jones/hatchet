@@ -1,5 +1,12 @@
 {
     "cSpell.words": [
         "yarg"
-    ]
+    ],
+    "editor.tabSize": 2,
+    "editor.formatOnSave": true,
+    "prettier.trailingComma": "es5",
+    "prettier.requireConfig": true,
+    "prettier.semi": false,
+    "prettier.singleQuote": true,
+    "prettier.disableLanguages": []
 }

@@ -32,7 +32,7 @@ const startHatchet = argv => {
   if (!foreground) {
     startDaemon(passThroughArgs)
   } else {
-    new Hatchet(require(config))
+    new Hatchet(config)
     log(chalk.green('Hatchet has started in the foreground...'))
   }
 }
@@ -58,7 +58,7 @@ const startDaemon = args => {
         pm2.disconnect() // Disconnects from PM2
         log(chalk.green('Hatchet has started in the background using pm2...'))
 
-          if (err) {
+        if (err) {
           throw err
         }
       }

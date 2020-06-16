@@ -4,7 +4,8 @@ module.exports.hatchetClient = ({ token, notifications }) => {
   return {
     sendMessage: async (text, raw) => {
       return axios({
-        url: 'https://hatchet.log9.dev/graphql',
+        url: 'http://localhost:3000/graphql',
+        // url: 'https://hatchet.log9.dev/graphql',
         method: 'post',
         headers: {
           Authorization: `bearer ${token}`,
@@ -12,14 +13,20 @@ module.exports.hatchetClient = ({ token, notifications }) => {
         },
         data: {
           query: `
-        mutation AddLogFile {
-            addLog(input: {
-                message: "${text}"
-                raw: "${raw.line}"
-                name: "${raw.file.basename}"
-                path: "${raw.file.dirname}"
-                notifications: ${JSON.stringify(notifications)}
-            }){ id }}`,
+mutation addLog($input: NewLogInput!) {
+  addLog(input: $input) {
+    id
+  }
+}`,
+          variables: {
+            input: {
+              message: text,
+              raw: raw.line,
+              name: raw.file.basename,
+              path: raw.file.dirname,
+              notifications: JSON.stringify(notifications),
+            }
+          },
         },
       })
     },

@@ -49,7 +49,7 @@ module.exports.successCallback = (file, { hatchet: hatchetConfig, drivers }) => 
     }))
 
     const msgClient = hatchetClient({ token: hatchetConfig.key, notifications: enabledOptions })
-    msgClient.sendMessage(message, rawMsg)
+    msgClient.sendMessage(message, rawMsg).catch(err => console.error(err.response.data.errors))
   }
 
   const customNotifications = Object.keys(desiredNotifications).filter(n => Object.keys(drivers).includes(n))

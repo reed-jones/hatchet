@@ -7,7 +7,11 @@ const { successCallback, errorCallback } = require('./callbacks')
 
 const absPath = p => p.replace(/^~\//, `${homedir}/`)
 
-module.exports.Hatchet = function (configuration) {
+module.exports.Hatchet = function (configPath) {
+
+  /** @var {Object} configuration */
+  const configuration = require(configPath)({ })
+
   /**
    * Starts a new 'tail' instance
    *
